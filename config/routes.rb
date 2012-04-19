@@ -1,3 +1,3 @@
 AboutPage::Engine.routes.draw do
-  root :to => 'about#index'
+  root :to => 'about_page/about#index'
 end

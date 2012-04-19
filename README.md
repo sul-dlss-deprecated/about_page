@@ -19,4 +19,3 @@ To use in a Hydra app:
 ## Known Issues
 
 * Solr must have LukeHandler enabled on /luke
-* About page doesn't currently render in application layout
