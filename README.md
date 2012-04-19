@@ -1,4 +1,4 @@
-= AboutPage
+# AboutPage
 
 To use in a Hydra app:
 
@@ -16,7 +16,7 @@ To use in a Hydra app:
     # In config/routes.rb
     mount AboutPage::Engine => '/about' # Or whever you want to access the about page
     
-== Known Issues
+## Known Issues
 
 * Solr must have LukeHandler enabled on /luke
 * About page doesn't currently render in application layout
