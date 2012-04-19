@@ -14,8 +14,8 @@ To use in a Hydra app:
     end
     
     # In config/routes.rb
-    mount AboutPage::Engine => '/about' # Or whever you want to access the about page
-    
+    mount AboutPage::Engine => '/about(.:format)' # Or whever you want to access the about page
+	
 ## Known Issues
 
 * Solr must have LukeHandler enabled on /luke

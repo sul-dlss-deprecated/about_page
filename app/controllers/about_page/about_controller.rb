@@ -32,8 +32,8 @@ module AboutPage
       
       respond_to do |format|
         format.html # about_page.html.erb
-        format.json { render :json => { :environment => @request_env, :solr => @solr_profile, :fedora => @fedora_profile } }
-        format.xml  { render :xml  => { :environment => @request_env, :solr => @solr_profile, :fedora => @fedora_profile } }
+        format.json { render :json => { :dependencies => @dependencies, :environment => @request_env, :solr => @solr_profile, :fedora => @fedora_profile } }
+        format.xml  { render :xml  => { :dependencies => @dependencies, :environment => @request_env, :solr => @solr_profile, :fedora => @fedora_profile } }
       end
     end
 
