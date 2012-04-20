@@ -1,27 +1,6 @@
 module AboutPage
   class AboutController < ApplicationController
-    
-    def section_for(key, value)
-      if Configuration.environment_sections.nil?
-        nil
-      else
-        Configuration.environment_sections.keys.find do |k| 
-          key =~ Configuration.environment_sections[k]
-        end
-      end
-    end
-  
     def index
-      @request_env = Hash.new { |h,k| h[k] = {} }
-      [ENV,request.env].each do |environment|
-        environment.each_pair do |key,value|
-          section = section_for(key,value)
-          unless section.nil?
-            @request_env[section][key] = value if value.is_a? String
-          end
-        end
-      end
-      
       env = Bundler.load
       groups = env.current_dependencies.group_by { |d| d.groups.first.to_s }
       @dependencies = Hash[groups.collect { |group,deps| [group,Hash[deps.collect { |dep| [dep.name,dependency_hash(env, dep.name)] }]] }]
@@ -31,8 +10,8 @@ module AboutPage
       
       respond_to do |format|
         format.html # about_page.html.erb
-        format.json { render :json => { :dependencies => @dependencies, :environment => @request_env, :solr => @solr_profile, :fedora => @fedora_profile } }
-        format.xml  { render :xml  => { :dependencies => @dependencies, :environment => @request_env, :solr => @solr_profile, :fedora => @fedora_profile } }
+        format.json { render :json => { :dependencies => @dependencies, :environment => AboutPage::Configuration::Environment, :solr => @solr_profile, :fedora => @fedora_profile } }
+        format.xml  { render :xml  => { :dependencies => @dependencies, :environment => AboutPage::Configuration::Environment, :solr => @solr_profile, :fedora => @fedora_profile } }
       end
     end
 
