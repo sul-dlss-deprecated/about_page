@@ -1,0 +1,6 @@
+<h1><%= key.to_s.humanize %></h1>
+<ul>
+  <% profile.each_pair do |k,v| %>
+    <li><%= [k,v].join(': ') %></li>
+  <% end %>
+</ul>

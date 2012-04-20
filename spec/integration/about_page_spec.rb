@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "the about page", :type => :request do
   describe "dependency versions" do
     before do
-      visit("/about_page")
+      visit("/about")
     end
 
     it "should contain a list of dependencies" do
@@ -13,11 +13,31 @@ describe "the about page", :type => :request do
 
   describe "environment section" do
     before do
-      visit("/about_page")
+      visit("/about")
     end
 
     it "should contain a list of environment variables" do
       page.should have_content "GEM_HOME"
+    end
+  end
+
+  describe "xml" do
+    before do
+      visit("/about.xml")
+    end
+    
+    it "should" do
+      page.body.should_not be_empty
+    end
+  end
+
+  describe "json" do
+    before do
+      visit("/about.json")
+    end
+    
+    it "should" do
+      page.body.should_not be_empty
     end
   end
 end

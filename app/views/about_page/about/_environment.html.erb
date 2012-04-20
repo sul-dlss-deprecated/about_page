@@ -1,0 +1,12 @@
+<h1><%= key.to_s.humanize %></h1>
+<% profile.each_pair do |section,env| %>
+  <h3><%= section %></h3>
+  <div class="environment">
+    <ul>
+      <% env.keys.sort.each do |key| %>
+      <li><%= [key,env[key]].join('=') %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+</div>

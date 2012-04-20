@@ -1,10 +1,9 @@
-<ul class="dependency">
-  <% graph.keys.sort.each do |name| spec = graph[name] %>
-    <li class="dependency">
-      <b><%= name %></b> (<%= spec[:version] %>)
-      <% if spec[:dependencies] %>
-          <%= render :partial => 'dependencies', :locals => { :graph => spec[:dependencies] }%>
-      <% end %>
-    </li>
-  <% end %>
-</ul>
+<h1>Dependency Versions</h1>
+<div class="dependencies">
+  <ul>
+    <% profile.each_pair do |group,deps| %>
+    <li class="dependency group"><%= group %><%= render :partial => 'dependency_tree', :locals => { :graph => deps } %></li>
+    <% end %>
+  </ul>
+</div>
+

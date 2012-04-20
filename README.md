@@ -9,8 +9,8 @@ To use in a Hydra app:
     AboutPage.configure do |config|
       config.app_name    = MyApplication.name                       # Application Name
       config.app_version = MyApplication::VERSION                   # Application Version
-      config.fedora      = ActiveFedora::Base.connection_for_pid(0) # Rubydora::Repository instance
-      config.solr        = ActiveFedora.solr                        # RSolr instance
+      config.fedora      = AboutPage::Fedora.new(ActiveFedora::Base.connection_for_pid(0)) # Rubydora::Repository instance
+      config.solr        = AboutPage::Solr.new(ActiveFedora.solr)                        # RSolr instance
     end
     
     # In config/routes.rb
