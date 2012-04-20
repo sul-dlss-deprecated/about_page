@@ -2,8 +2,8 @@
 <h1>Dependency Versions</h1>
 <div class="dependencies">
   <ul>
-    <% @dependencies.each do |spec, version| %>
-      <li><b><%= spec %></b> (<%= version %>)</li>
+    <% @dependencies.each_pair do |group,deps| %>
+    <li class="dependency group"><%= group %><%= render :partial => 'dependencies', :locals => { :graph => deps } %></li>
     <% end %>
   </ul>
 </div>
