@@ -1,6 +1,6 @@
 <div class="about_page">
   <% @configuration.each do |key, profile| %>
-    <%= render :partial => ({:solr => 'generic_hash', :fedora => 'generic_hash', :request => 'environment'}[key] || key.to_s), :locals => { :key => key, :profile => profile } %>
+    <%= render :partial => partial_for_about_key(key), :locals => { :key => key, :profile => profile } %>
   <% end %>
 </div>
 

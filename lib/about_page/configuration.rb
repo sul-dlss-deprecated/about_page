@@ -19,14 +19,5 @@ module AboutPage
 
   Configuration = OpenStructWithHashAccess.new
 
-  Configuration.dependencies = AboutPage::Dependencies.new
-
-  Configuration.environment = AboutPage::Environment.new({ 
-    'Ruby' => /^(RUBY|GEM_|rvm)/
-  })
-
-  Configuration.request = AboutPage::RequestEnvironment.new({
-    'HTTP Server' => /^(SERVER_|POW_)/,
-    'WebAuth' => /^WEBAUTH_/
-  })
+ 
 end
