@@ -8,6 +8,14 @@ module AboutPage
       Hash[*@table.map { |k, v| [k, (v.to_h if v.respond_to? :to_h || v) ] }.flatten ]
     end
 
+    def reject &block
+      self.class.new to_h.reject(&block)
+    end
+
+    def select &block
+      self.class.new to_h.select(&block)
+    end
+
     def to_xml(options = {})
       @table
     end
@@ -22,8 +30,16 @@ module AboutPage
     delegate :to_xml, :to_h, :to_json, :to => :hash
     delegate :each, :map, :to => :to_h
 
-    def initialize
-      @hash = OpenStructWithHashAccess.new
+    def initialize hash = nil
+      @hash = hash || OpenStructWithHashAccess.new
+    end
+
+    def reject &block
+      AboutPage::Configuration.new @hash.reject(&block)
+    end
+
+    def select &block
+      AboutPage::Configuration.new @hash.select(&block)
     end
 
     def method_missing *args

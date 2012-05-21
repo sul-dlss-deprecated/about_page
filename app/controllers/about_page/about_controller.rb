@@ -7,7 +7,8 @@ module AboutPage
     def index
       @configuration = AboutPage.configuration
 
-      AboutPage.configuration.set_headers!(response)
+      @configuration = @configuration.select { |key, value| (params[:filter].split(/[\W\+]/) + ["app"]).include? key.to_s } if params[:filter]
+      @configuration.set_headers!(response)
 
       respond_to do |format|
         format.html { render :status => @configuration.ok? ? 200 : 417 } # about_page.html.erb
