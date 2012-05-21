@@ -23,5 +23,10 @@ module AboutPage
       a
     end
 
+    def preflight request
+      # FIXME: ew.
+      self.rubydora.instance_variable_set('@profile', nil)
+    end
+
   end
 end

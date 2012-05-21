@@ -38,6 +38,7 @@ module AboutPage
     end
 
     def preflight request
+      @schema = nil
       @minimum_numdocs = request.params['solr.numDocs'].to_i if request.params['solr.numDocs'].to_i
     end
 
