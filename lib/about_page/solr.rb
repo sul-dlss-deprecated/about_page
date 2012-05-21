@@ -3,7 +3,6 @@ module AboutPage
     delegate :each_pair, :to_json, :to_xml, :to => :to_h
 
     attr_accessor :rsolr, :options
-    attr_writer :minimum_numdocs
 
     def initialize rsolr_instance, options = {}
       self.rsolr = rsolr_instance
@@ -32,7 +31,7 @@ module AboutPage
     end
 
     def preflight request
-      self.minimum_numdocs = request.params['solr.numDocs'].to_i if request.params['solr.numDocs'].to_i
+      @minimum_numdocs = request.params['solr.numDocs'].to_i if request.params['solr.numDocs'].to_i
     end
 
     def minimum_numdocs
