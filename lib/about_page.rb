@@ -15,4 +15,8 @@ module AboutPage
   def self.configuration
     @configuration ||= Configuration.new
   end
+
+  def self.reset!
+    @configuration = nil
+  end
 end

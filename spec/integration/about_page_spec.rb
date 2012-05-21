@@ -1,6 +1,24 @@
 require 'spec_helper'
 
 describe "the about page", :type => :request do
+  before :all do
+    AboutPage.reset!
+
+AboutPage.configure do |config|
+  config.app = { :name => 'Application Name', :version => '0.0.0' }
+
+  config.dependencies = AboutPage::Dependencies.new
+
+  config.environment = AboutPage::Environment.new({ 
+    'Ruby' => /^(RUBY|GEM_|rvm)/
+  })
+
+  config.request = AboutPage::RequestEnvironment.new({
+    'HTTP Server' => /^(SERVER_|POW_)/,
+    'WebAuth' => /^WEBAUTH_/
+  })
+end
+  end
   describe "dependency versions" do
     before do
       visit("/about")
