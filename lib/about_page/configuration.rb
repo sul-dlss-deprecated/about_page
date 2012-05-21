@@ -17,7 +17,18 @@ module AboutPage
     end
   end
 
-  Configuration = OpenStructWithHashAccess.new
+  class Configuration
+    attr_accessor :hash
+    delegate :to_xml, :to_h, :to_json, :to => :hash
+    delegate :each, :map, :to => :to_h
 
- 
+    def initialize
+      @hash = OpenStructWithHashAccess.new
+    end
+
+    def method_missing *args
+      @hash.send(*args)
+    end
+
+     end
 end
