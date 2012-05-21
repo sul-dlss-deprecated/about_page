@@ -23,11 +23,18 @@ module AboutPage
     alias_method :to_h, :index
 
     def ok?
-      true if index[:numDocs].to_i >= minimum_numdocs
+      return false if schema.empty?
+      return false if index[:numDocs].to_i < minimum_numdocs
+
+      true
     end
 
-    def set_headers! response
-      add_header(response, "solr numDocs: #{index[:numDocs]} < #{minimum_numdocs}") if index[:numDocs].to_i < minimum_numdocs
+    def messages
+      a = []
+      a << "Unable to connect to solr: #{self.rsolr.inspect}" if schema.empty?
+      a << "Solr numDocs (#{index[:numDocs]}) is less than the minimum #{minimum_numdocs}" if !schema.empty? and index[:numDocs].to_i < minimum_numdocs
+
+      a
     end
 
     def preflight request

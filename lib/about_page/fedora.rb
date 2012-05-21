@@ -9,7 +9,19 @@ module AboutPage
     end
 
     def to_h
-      rubydora.profile
+      rubydora.profile || {}
     end
+
+    def ok?
+      !to_h.empty?
+    end
+
+    def messages
+      a = []
+      a << "Unable to connect to fedora: #{self.rubydora.inspect}" if rubydora.profile.nil?
+
+      a
+    end
+
   end
 end

@@ -68,7 +68,7 @@ module AboutPage
       end
 
       def set_headers! response
-
+        messages.each { |m| add_header(response, m) }
       end
 
       def add_header response, text
@@ -79,6 +79,10 @@ module AboutPage
 
       def ok?
         true
+      end
+
+      def messages
+        []
       end
     end
   end
