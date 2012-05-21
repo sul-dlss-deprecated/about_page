@@ -7,11 +7,11 @@ require "about_page/version"
 Gem::Specification.new do |s|
   s.name        = "about_page"
   s.version     = AboutPage::VERSION
-  s.authors     = ["TODO: Your name"]
-  s.email       = ["TODO: Your email"]
-  s.homepage    = "TODO"
-  s.summary     = "TODO: Summary of AboutPage."
-  s.description = "TODO: Description of AboutPage."
+  s.authors     = ["Michael B. Klein", "Chris Beer"]
+  s.email       = ["mbklein@stanford.edu", "cabeer@stanford.edu"]
+  s.homepage    = "http://github.com/sul-dlss/about_page"
+  s.summary     = "Summary of AboutPage."
+  s.description = "Description of AboutPage."
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
