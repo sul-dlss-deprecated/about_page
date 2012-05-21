@@ -1,5 +1,5 @@
 module AboutPage
-  class Environment
+  class Environment < AboutPage::Configuration::Node
     attr_accessor :sections
     delegate :each_pair, :to_json, :to_xml, :to => :to_h
 

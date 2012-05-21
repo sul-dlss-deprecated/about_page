@@ -1,5 +1,5 @@
 module AboutPage
-  class Dependencies
+  class Dependencies < AboutPage::Configuration::Node
     delegate :each_pair, :to_xml, :to_json, :to => :to_h
     def to_h
       @dependencies ||= Hash[groups.collect { |group,deps| [group,Hash[deps.collect { |dep| [dep.name,dependency_hash(environment, dep.name)] }]] }]

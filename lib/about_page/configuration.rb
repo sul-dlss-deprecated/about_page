@@ -30,5 +30,40 @@ module AboutPage
       @hash.send(*args)
     end
 
-     end
+    def preflight request
+      self.nodes.each { |key, profile| profile.preflight(request) }
+    end
+
+    def ok?
+       self.nodes.select { |key, profile| profile.respond_to? :ok? }.all? { |key, profile| profile.ok? }
+    end
+
+    def nodes
+      self.to_h.select { |key, profile| profile.is_a? AboutPage::Configuration::Node }
+    end
+
+    def set_headers! response
+      self.nodes.each { |key, profile| profile.set_headers! response }
+    end
+
+    class Node
+      def preflight request
+
+      end
+
+      def set_headers! response
+
+      end
+
+      def add_header response, text
+        response.headers['X-AboutPage-Warning'] ||= "" 
+        response.headers['X-AboutPage-Warning'] += "#{text};"
+        
+      end
+
+      def ok?
+        true
+      end
+    end
+  end
 end

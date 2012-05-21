@@ -1,8 +1,8 @@
 module AboutPage
-  class Fedora
+  class Fedora < AboutPage::Configuration::Node
     delegate :each_pair, :to_json, :to_xml, :to => :to_h
 
-    attr_accessible :rubydora
+    attr_accessor :rubydora
 
     def initialize rubydora_instance
       self.rubydora = rubydora_instance
