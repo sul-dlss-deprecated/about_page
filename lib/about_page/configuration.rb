@@ -50,8 +50,8 @@ module AboutPage
       self.nodes.each { |key, profile| profile.preflight(request) }
     end
 
-    def ok?
-       self.nodes.select { |key, profile| profile.respond_to? :ok? }.all? { |key, profile| profile.ok? }
+    def valid?
+       self.nodes.select { |key, profile| profile.respond_to? :ok? }.all? { |key, profile| profile.valid? }
     end
 
     def nodes
@@ -63,8 +63,20 @@ module AboutPage
     end
 
     class Node
-      def preflight request
+      include ActiveModel::Validations
 
+      def preflight request
+        errors.clear
+        @request_expectations = request.params.select { |k,v| k =~ /^#{namespace}\./ }
+      end
+
+      def expects key 
+        @request_expectations["#{namespace}.#{key}"] || self.options[:expects][key] if @request_expectations
+      end
+
+      def messages
+        run_validations!
+        errors.to_a.uniq
       end
 
       def set_headers! response
@@ -73,16 +85,13 @@ module AboutPage
 
       def add_header response, text
         response.headers['X-AboutPage-Warning'] ||= "" 
-        response.headers['X-AboutPage-Warning'] += "#{text};"
+        response.headers['X-AboutPage-Warning'] += "#{self.class.name}: #{text};"
         
       end
 
-      def ok?
-        true
-      end
-
-      def messages
-        []
+      protected
+      def namespace
+        self.class.name.split("::").last.downcase
       end
     end
   end

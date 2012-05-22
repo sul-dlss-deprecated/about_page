@@ -1,6 +1,6 @@
 <div class="about_page">
   <% @configuration.each do |key, profile| %>
-    <div class="pane pane-<%= key.to_s.parameterize %> <%= 'not-ok' if profile.respond_to? :ok? and !profile.ok? %>">
+    <div class="pane pane-<%= key.to_s.parameterize %> <%= 'not-ok' if profile.respond_to? :valid? and !profile.valid? %>">
       <%= render_about_pane(key, profile) %>
     </div>
   <% end %>

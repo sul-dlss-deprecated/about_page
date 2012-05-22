@@ -1,9 +1,7 @@
 <h1><%= key.to_s.humanize %></h1>
-<% if profile.respond_to? :messages %>
   <% profile.messages.each do |msg| %>
     <div><%= msg %></div>
-  <% end %>
-<% end %>
+  <% end if profile.respond_to? :messages %>
 <ul>
   <% profile.each_pair do |k,v| %>
     <li><%= [k,v].join(': ') %></li>

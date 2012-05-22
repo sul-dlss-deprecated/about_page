@@ -2,30 +2,31 @@ module AboutPage
   class Fedora < AboutPage::Configuration::Node
     delegate :each_pair, :to_json, :to_xml, :to => :to_h
 
+    validates_each :profile do |record, attr, value| 
+      unless value.present?
+        record.errors.add attr, ": unable to connect to Fedora: #{record.rubydora.inspect}"
+      end
+    end
+
     attr_accessor :rubydora
 
     def initialize rubydora_instance
       self.rubydora = rubydora_instance
     end
 
-    def to_h
+    def profile
       rubydora.profile || {}
     end
 
-    def ok?
-      !to_h.empty?
+    def to_h
+      profile
     end
 
-    def messages
-      a = []
-      a << "Unable to connect to fedora: #{self.rubydora.inspect}" if rubydora.profile.nil?
-
-      a
-    end
 
     def preflight request
       # FIXME: ew.
       self.rubydora.instance_variable_set('@profile', nil)
+      super(request)
     end
 
   end

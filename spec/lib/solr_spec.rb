@@ -27,31 +27,30 @@ describe AboutPage::Solr do
     end
   end
 
-
-  describe "#ok?" do
+  describe "#valid?" do
     it "should be ok if the number of documents in the index is greater than or equal to the :minimum_numdocs" do
-      subject.stub(:index).and_return { { :numDocs => 1 }}
-      subject.stub(:minimum_numdocs).and_return 1
-      subject.should be_ok
+      subject.stub(:schema).and_return { { 'index' => { :numDocs => 1 } } } 
+      subject.stub(:expects).and_return 1
+      subject.should be_valid
     end
 
     it "should be not be ok if the number of documents in the index is less than the :minimum_numdocs" do
-      subject.stub(:index).and_return { { :numDocs => 1 }}
-      subject.stub(:minimum_numdocs).and_return 5
-      subject.should_not be_ok
+      subject.stub(:schema).and_return { { 'index' => { :numDocs => 1 } } }
+      subject.stub(:expects).and_return 5
+      subject.should_not be_valid
     end
 
     it "should not be ok if the index :numDocs param is not set" do
-      subject.stub(:index).and_return { Hash.new }
-      subject.stub(:minimum_numdocs).and_return 1
-      subject.should_not be_ok
+      subject.stub(:schema).and_return { { 'index' => { } } } 
+      subject.stub(:expects).and_return 1
+      subject.should_not be_valid
     end
   end
 
   describe "#set_headers!" do
     it "should add helpful headers when something is wrong" do
-      subject.stub(:index).and_return { { :numDocs => 1 }}
-      subject.stub(:minimum_numdocs).and_return 5
+      subject.stub(:schema).and_return { { 'index' => { :numDocs => 1 } } } 
+      subject.stub(:expects).and_return 5
 
       subject.should_receive(:add_header)
       subject.set_headers! mock()
@@ -60,19 +59,19 @@ describe AboutPage::Solr do
 
   describe "#minimum_numdocs" do
     it "should default to 1" do
-      subject.minimum_numdocs.should == 1
+      subject.expects(:numDocs).should == 1
     end
 
     it "should use parameters given in the configuration" do
-      node = AboutPage::Solr.new(@mock_solr_connection, :minimum_numdocs => 5)
-      node.minimum_numdocs.should == 5
+      node = AboutPage::Solr.new(@mock_solr_connection, :expects => { :numDocs => 5 })
+      node.expects(:numDocs).should == 5
     end
 
     it "should use the request parameters to set the minimum_numdocs" do
-      node = AboutPage::Solr.new(@mock_solr_connection, :minimum_numdocs => 5)
+      node = AboutPage::Solr.new(@mock_solr_connection, :expects => { :numDocs => 5 })
       node.preflight(mock(:params => { 'solr.numDocs' => 1000 }))
 
-      node.minimum_numdocs.should == 1000
+      node.expects(:numDocs).should == 1000 
     end
   end
 

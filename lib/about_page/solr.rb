@@ -4,11 +4,21 @@ module AboutPage
 
     attr_accessor :rsolr, :options
 
+    validates_each :schema do |record, attr, value| 
+      unless value.present?
+        record.errors.add attr, ": unable to connect to Solr: #{record.rsolr.inspect}"
+      end
+    end
+    validates :numDocs, :numericality => { :greater_than_or_equal_to => Proc.new { |c| c.expects(:numDocs) } }
+
+
     def initialize rsolr_instance, options = {}
       self.rsolr = rsolr_instance
       self.options = options
+      self.options[:expects] ||= {}
+      self.options[:expects][:numDocs] ||= 1
 
-      self.options[:minimum_numdocs] ||= 1
+      @request_expectations = {}
     end
 
     def schema
@@ -35,35 +45,20 @@ module AboutPage
     end
 
     def index
-      schema['index'] || {}
+      (schema || {})['index'] || {}
     end
 
     def to_h
       index.merge(registry)
     end
 
-    def ok?
-      return false if schema.empty?
-      return false if index[:numDocs].to_i < minimum_numdocs
-
-      true
-    end
-
-    def messages
-      a = []
-      a << "Unable to connect to solr: #{self.rsolr.inspect}" if schema.empty?
-      a << "Solr numDocs (#{index[:numDocs]}) is less than the minimum #{minimum_numdocs}" if !schema.empty? and index[:numDocs].to_i < minimum_numdocs
-
-      a
-    end
+    def numDocs; index[:numDocs]; end
 
     def preflight request
       @schema = nil
-      @minimum_numdocs = request.params['solr.numDocs'].to_i if request.params['solr.numDocs'].to_i
-    end
+      @registry = nil
 
-    def minimum_numdocs
-      @minimum_numdocs || self.options[:minimum_numdocs]
+      super
     end
   end
 end

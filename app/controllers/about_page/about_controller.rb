@@ -11,7 +11,7 @@ module AboutPage
       @configuration.set_headers!(response)
 
       respond_to do |format|
-        format.html { render :status => @configuration.ok? ? 200 : 417 } # about_page.html.erb
+        format.html { render :status => @configuration.valid? ? 200 : 417 } # about_page.html.erb
         format.json { render :json => @configuration.to_json }
         format.xml  { render :xml  => @configuration.to_xml }
       end
