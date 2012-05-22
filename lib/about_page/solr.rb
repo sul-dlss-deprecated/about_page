@@ -17,10 +17,30 @@ module AboutPage
       {}
     end
 
+    def registry
+      @registry ||= begin
+                      h = {}
+                      resp = rsolr.get 'admin/registry.jsp', :params => { :wt => 'xml' }
+                      doc = Nokogiri::XML resp
+
+                      doc.xpath('/solr/*').each do |node|
+                        next if node.name == "solr-info"
+                        h[node.name] = node.text
+                      end
+
+                      h
+                    end
+    rescue
+      {}
+    end
+
     def index
       schema['index'] || {}
     end
-    alias_method :to_h, :index
+
+    def to_h
+      index.merge(registry)
+    end
 
     def ok?
       return false if schema.empty?
