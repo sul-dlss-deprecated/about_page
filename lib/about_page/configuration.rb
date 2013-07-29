@@ -65,6 +65,13 @@ module AboutPage
     class Node
       include ActiveModel::Validations
 
+      class << self
+        attr_reader :partial
+        def render_with partial
+          @partial = partial
+        end
+      end
+
       def preflight request
         errors.clear
         @request_expectations = request.params.select { |k,v| k =~ /^#{namespace}\./ }
@@ -86,7 +93,6 @@ module AboutPage
       def add_header response, text
         response.headers['X-AboutPage-Warning'] ||= "" 
         response.headers['X-AboutPage-Warning'] += "#{self.class.name}: #{text};"
-        
       end
 
       protected

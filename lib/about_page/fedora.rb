@@ -8,6 +8,8 @@ module AboutPage
       end
     end
 
+    render_with 'generic_hash'
+
     attr_accessor :rubydora
 
     def initialize rubydora_instance

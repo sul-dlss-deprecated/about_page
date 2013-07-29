@@ -1,7 +1,7 @@
 module AboutPage
   class Solr  < AboutPage::Configuration::Node
     delegate :each_pair, :to_json, :to_xml, :to => :to_h
-
+    
     attr_accessor :rsolr, :options
 
     validates_each :schema do |record, attr, value| 
@@ -11,6 +11,7 @@ module AboutPage
     end
     validates :numDocs, :numericality => { :greater_than_or_equal_to => Proc.new { |c| c.expects(:numDocs) } }
 
+    render_with 'generic_hash'
 
     def initialize rsolr_instance, options = {}
       self.rsolr = rsolr_instance
@@ -58,7 +59,7 @@ module AboutPage
       index#.merge(registry)
     end
 
-    def numDocs; index[:numDocs]; end
+    def numDocs; index[:numDocs] || index['numDocs']; end
 
     def preflight request
       @schema = nil
