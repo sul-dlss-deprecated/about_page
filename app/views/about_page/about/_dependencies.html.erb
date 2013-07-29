@@ -1,8 +1,8 @@
-<h1>Dependency Versions</h1>
+<h1>Dependencies</h1>
 <div class="dependencies">
   <ul>
-    <% profile.each_pair do |group,deps| %>
-    <li class="dependency group"><%= group %><%= render :partial => 'dependency_tree', :locals => { :graph => deps } %></li>
+    <% profile.spec_list.each do |dep,version,groups| %>
+    <li class="dependency<%=groups.present? ? ' required' : ''%>"><%=dep%> (<%=version%>)</li>
     <% end %>
   </ul>
 </div>

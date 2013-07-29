@@ -1,8 +1,35 @@
 module AboutPage
   class Dependencies < AboutPage::Configuration::Node
     delegate :each_pair, :to_xml, :to_json, :to => :to_h
+    attr_reader :max_depth
+
+    def initialize(max_depth=100)
+      @max_depth = max_depth
+    end
+
     def to_h
-      @dependencies ||= Hash[groups.collect { |group,deps| [group,Hash[deps.collect { |dep| [dep.name,dependency_hash(environment, dep.name)] }]] }]
+      @dependencies ||= spec_list.inject({}) { |h,data|
+        spec = { :name => data[0], :version => data[1] }
+        if data[2].nil?
+          h[:implied] ||= []
+          h[:implied] << spec
+        else
+          data[2].each { |g| 
+            h[g] ||= [] 
+            h[g] << spec
+          }
+        end
+        h        
+      }
+    end
+
+    def spec_list
+      required = environment.current_dependencies.inject({}) { |h,d| h[d.name] = d.groups; h }
+      list = environment.specs.sort { |a,b| a.name <=> b.name }.collect { |s| [
+        s.name, 
+        [s.version.to_s, s.git_version.to_s].join,
+        required[s.name]
+      ]}
     end
 
     private
@@ -14,19 +41,25 @@ module AboutPage
       @groups ||= environment.current_dependencies.group_by { |d| d.groups.first.to_s }
     end
 
-    def dependency_version(env, key)
-      spec = env.specs.find { |s| s.name == key }
+    def specs
+      @specs ||= environment.specs
+    end
+
+    def dependency_version(key)
+      spec = environment.specs.find { |s| s.name == key }
       rev = spec.git_version
       rev.strip! unless rev.nil?
       location = [spec.source.options.values_at('path','uri').compact.first,rev].compact.join('@')
       [spec.version.to_s,location].compact.join(' ').strip
     end
     
-    def dependency_hash(env, key, graph=nil)
-      graph = Bundler::Graph.new(env,'/dev/null') if graph.nil?
-      result = { :version => dependency_version(env, key) }
-      deps = Hash[graph.relations[key].collect { |dep| [dep, dependency_hash(env, dep, graph)]}]
-      result[:dependencies] = deps unless deps.empty?
+    def dependency_hash(key, graph=nil, depth=0)
+      graph = Bundler::Graph.new(environment,'/dev/null') if graph.nil?
+      result = { :version => dependency_version(key) }
+      if depth < @max_depth
+        deps = Hash[graph.relations[key].collect { |dep| [dep, dependency_hash(dep, graph, depth+1)]}]
+        result[:dependencies] = deps unless deps.empty?
+      end
       result
     end
   end
