@@ -9,7 +9,7 @@ module AboutPage
         record.errors.add attr, ": unable to connect to Solr: #{record.rsolr.inspect}"
       end
     end
-j    validates :numDocs, :numericality => { :greater_than_or_equal_to => Proc.new { |c| c.expects(:numDocs) } }
+    validates :numDocs, :numericality => { :greater_than_or_equal_to => Proc.new { |c| c.expects(:numDocs) } }
 
 
     def initialize rsolr_instance, options = {}
@@ -58,7 +58,7 @@ j    validates :numDocs, :numericality => { :greater_than_or_equal_to => Proc.ne
       index#.merge(registry)
     end
 
-    def numDocs; index[:numDocs] || index['numDocs']; end
+    def numDocs; index[:numDocs]; end
 
     def preflight request
       @schema = nil
