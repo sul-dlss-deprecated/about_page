@@ -9,11 +9,11 @@ describe AboutPage::Solr do
 
   describe "#schema" do
     it "should be empty if the connection to solr fails" do
-      @mock_solr_connection.should_receive(:luke).with(any_args).and_throw(:msg)
+      @mock_solr_connection.should_receive(:get).with('admin/luke', an_instance_of(Hash)).and_throw(:msg)
       subject.schema.should be_empty
     end
     it "should retrieve index information from luke" do
-      @mock_solr_connection.should_receive(:luke).with(any_args).and_return { Hash.new }
+      @mock_solr_connection.should_receive(:get).with('admin/luke', an_instance_of(Hash)).and_return { Hash.new }
       subject.schema.should be_a_kind_of(Hash)
     end
   end

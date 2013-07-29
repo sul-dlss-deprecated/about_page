@@ -15,14 +15,20 @@ module AboutPage
     def initialize rsolr_instance, options = {}
       self.rsolr = rsolr_instance
       self.options = options
-      self.options[:expects] ||= {}
+      self.options[:luke]     ||= 'admin/luke'
+      if self.options[:registry] == :registry
+        self.options[:registry] = 'admin/registry.jsp'
+      else
+        self.options[:registry] ||= 'admin/mbeans'
+      end
+      self.options[:expects]  ||= {}
       self.options[:expects][:numDocs] ||= 1
 
       @request_expectations = {}
     end
 
     def schema
-      @schema ||= rsolr.luke(:show => 'schema', :numTerms => 0)
+      @schema ||= rsolr.get self.options[:luke], :params => { :show => 'schema', :numTerms => 0 }
     rescue
       {}
     end
@@ -30,7 +36,7 @@ module AboutPage
     def registry
       @registry ||= begin
                       h = {}
-                      resp = rsolr.get 'admin/registry.jsp', :params => { :wt => 'xml' }
+                      resp = rsolr.get self.options[:registry], :params => { :wt => 'xml' }
                       doc = Nokogiri::XML resp
 
                       doc.xpath('/solr/*').each do |node|
@@ -49,7 +55,7 @@ module AboutPage
     end
 
     def to_h
-      index.merge(registry)
+      index#.merge(registry)
     end
 
     def numDocs; index[:numDocs]; end
