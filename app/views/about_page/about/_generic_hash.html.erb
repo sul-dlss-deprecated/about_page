@@ -1,4 +1,4 @@
-<h1><%= key.to_s.humanize %></h1>
+<h2><%= key.to_s.humanize %></h2>
   <% profile.messages.each do |msg| %>
     <div><%= msg %></div>
   <% end if profile.respond_to? :messages %>

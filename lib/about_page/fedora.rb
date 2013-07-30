@@ -4,7 +4,7 @@ module AboutPage
 
     validates_each :profile do |record, attr, value| 
       unless value.present?
-        record.errors.add attr, ": unable to connect to Fedora: #{record.rubydora.inspect}"
+        record.errors.add attr, ": unable to connect to Fedora at #{record.rubydora.config[:url]}"
       end
     end
 
