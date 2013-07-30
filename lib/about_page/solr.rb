@@ -4,9 +4,9 @@ module AboutPage
     
     attr_accessor :rsolr, :options
 
-    validates_each :schema do |record, attr, value| 
-      unless value.present?
-        record.errors.add attr, ": unable to connect to Solr: #{record.rsolr.inspect}"
+    validates_each :ping do |record, attr, value|
+      unless value == 'OK'
+        record.errors.add attr, ": unable to ping Solr at #{record.rsolr.uri.to_s}"
       end
     end
     validates :numDocs, :numericality => { :greater_than_or_equal_to => Proc.new { |c| c.expects(:numDocs) } }
@@ -26,6 +26,12 @@ module AboutPage
       self.options[:expects][:numDocs] ||= 1
 
       @request_expectations = {}
+    end
+
+    def ping
+      rsolr.get('admin/ping')['status']
+    rescue
+      nil
     end
 
     def schema

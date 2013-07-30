@@ -3,6 +3,7 @@ require 'spec_helper'
 describe AboutPage::Solr do
   before :each do
     @mock_solr_connection = double('RSolr::Connection')
+    @mock_solr_connection.stub(:uri, URI.parse("http://example.edu/solr"))
   end
 
   subject { AboutPage::Solr.new(@mock_solr_connection) }
@@ -29,18 +30,28 @@ describe AboutPage::Solr do
 
   describe "#valid?" do
     it "should be ok if the number of documents in the index is greater than or equal to the :minimum_numdocs" do
+      subject.stub(:ping).and_return { 'OK' } 
       subject.stub(:schema).and_return { { 'index' => { :numDocs => 1 } } } 
       subject.stub(:expects).and_return 1
       subject.should be_valid
     end
 
     it "should be not be ok if the number of documents in the index is less than the :minimum_numdocs" do
+      subject.stub(:ping).and_return { 'OK' } 
       subject.stub(:schema).and_return { { 'index' => { :numDocs => 1 } } }
       subject.stub(:expects).and_return 5
       subject.should_not be_valid
     end
 
     it "should not be ok if the index :numDocs param is not set" do
+      subject.stub(:ping).and_return { 'OK' } 
+      subject.stub(:schema).and_return { { 'index' => { } } } 
+      subject.stub(:expects).and_return 1
+      subject.should_not be_valid
+    end
+
+    it "should not be ok if the server doesn't respond to ping" do
+      subject.stub(:ping).and_return nil
       subject.stub(:schema).and_return { { 'index' => { } } } 
       subject.stub(:expects).and_return 1
       subject.should_not be_valid
@@ -49,6 +60,7 @@ describe AboutPage::Solr do
 
   describe "#set_headers!" do
     it "should add helpful headers when something is wrong" do
+      subject.stub(:ping).and_return { 'OK' } 
       subject.stub(:schema).and_return { { 'index' => { :numDocs => 1 } } } 
       subject.stub(:expects).and_return 5
 
