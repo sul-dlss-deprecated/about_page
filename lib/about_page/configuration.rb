@@ -27,7 +27,7 @@ module AboutPage
 
   class Configuration
     attr_accessor :hash
-    delegate :to_xml, :to_h, :to_json, :to => :hash
+    delegate :to_xml, :to_json, :to_yaml, :to => :to_h
     delegate :each, :map, :to => :to_h
 
     def initialize hash = nil
@@ -55,15 +55,31 @@ module AboutPage
     end
 
     def nodes
-      self.to_h.select { |key, profile| profile.is_a? AboutPage::Configuration::Node }
+      self.hash.to_h.select { |key, profile| profile.is_a? AboutPage::Configuration::Node }
     end
 
     def set_headers! response
       self.nodes.each { |key, profile| profile.set_headers! response }
     end
 
+    def to_h
+      self.hash.to_h.inject({}) { |h,v| h[v[0]] = v[1].respond_to?(:to_h) ? v[1].to_h : v[1]; h }
+    end
+
+    def health_report
+      self.nodes.collect do |key, profile| 
+        if profile.class.validators.length > 0 
+          health = profile.valid? ? 'ok' : 'error'
+          { 'component' => key.to_s, 'status' => health, 'errors' => profile.errors.to_a }
+        else
+          nil
+        end
+      end.compact
+    end
+
     class Node
       include ActiveModel::Validations
+      delegate :each_pair, :to_xml, :to_json, :to_yaml, :to => :to_h
 
       class << self
         attr_reader :partial
@@ -84,6 +100,10 @@ module AboutPage
       def messages
         run_validations!
         errors.to_a.uniq
+      end
+
+      def to_h
+        nil
       end
 
       def set_headers! response

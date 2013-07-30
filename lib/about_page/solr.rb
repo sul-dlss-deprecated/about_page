@@ -1,6 +1,5 @@
 module AboutPage
   class Solr  < AboutPage::Configuration::Node
-    delegate :each_pair, :to_json, :to_xml, :to => :to_h
     
     attr_accessor :rsolr, :options
 

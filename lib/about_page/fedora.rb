@@ -1,6 +1,5 @@
 module AboutPage
   class Fedora < AboutPage::Configuration::Node
-    delegate :each_pair, :to_json, :to_xml, :to => :to_h
 
     validates_each :profile do |record, attr, value| 
       unless value.present?

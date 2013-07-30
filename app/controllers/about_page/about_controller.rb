@@ -15,24 +15,19 @@ module AboutPage
     def index
       respond_to do |format|
         format.html { render :status => @configuration.valid? ? 200 : 417 } # about_page.html.erb
-        format.json { render :json => @configuration.to_json }
-        format.xml  { render :xml  => @configuration.to_xml }
+        format.json { render :json   => @configuration.to_json }
+        format.xml  { render :xml    => @configuration.to_xml  }
+        format.yaml { render :text   => @configuration.to_yaml, :content_type => 'text/yaml' }
       end
     end
 
     def health
-      @states = @configuration.map do |key,profile| 
-        if profile.class.respond_to?(:validators) and profile.class.validators.length > 0 
-          health = profile.valid? ? 'ok' : 'error'
-          { 'component' => key.to_s, 'status' => health, 'errors' => profile.errors.to_a }
-        else
-          nil
-        end
-      end.compact
+      @states = @configuration.health_report
       respond_to do |format|
         format.html { render }
         format.json { render :json => @states }
         format.xml  { render :xml  => @states }
+        format.yaml { render :text => @states.to_yaml, :content_type => 'text/yaml' }
       end
     end
   end

@@ -1,6 +1,5 @@
 module AboutPage
   class Dependencies < AboutPage::Configuration::Node
-    delegate :each_pair, :to_xml, :to_json, :to => :to_h
     attr_reader :max_depth
 
     def initialize(max_depth=100)
