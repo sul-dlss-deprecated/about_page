@@ -1,0 +1,19 @@
+<div class="about_page">
+<h3>Service Health</h3>
+  <ul>
+    <% @states.each do |component| %>
+    <li class="component">
+      <b><%=component['component']%></b>
+      <span class="label label-<%=component['status'] == 'error' ? 'important' : 'success'%>"><%=component['status']%></span>
+      <% if component['errors'].length > 0 %>
+        <ul>
+        <li>
+        <%= component['errors'].to_a.join('</li><li>').html_safe %>
+        </li>
+        </ul>
+      <% end %>
+    </li>
+    <% end %>
+  </ul>
+</div>
+
