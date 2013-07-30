@@ -4,20 +4,20 @@ describe "the about page", :type => :request do
   before :all do
     AboutPage.reset!
 
-AboutPage.configure do |config|
-  config.app = { :name => 'Application Name', :version => '0.0.0' }
+    AboutPage.configure do |config|
+      config.app = { :name => 'Application Name', :version => '0.0.0' }
 
-  config.dependencies = AboutPage::Dependencies.new
+      config.dependencies = AboutPage::Dependencies.new
 
-  config.environment = AboutPage::Environment.new({ 
-    'Ruby' => /^(RUBY|GEM_|rvm)/
-  })
+      config.environment = AboutPage::Environment.new({ 
+        'Ruby' => /^(RUBY|GEM_|rvm)/
+      })
 
-  config.request = AboutPage::RequestEnvironment.new({
-    'HTTP Server' => /^(SERVER_|POW_)/,
-    'WebAuth' => /^WEBAUTH_/
-  })
-end
+      config.request = AboutPage::RequestEnvironment.new({
+        'HTTP Server' => /^(SERVER_|POW_)/,
+        'WebAuth' => /^WEBAUTH_/
+      })
+    end
   end
   describe "dependency versions" do
     before do
@@ -45,6 +45,7 @@ end
     end
     
     it "should" do
+      page.response_headers['Content-Type'].should =~ /xml/
       page.body.should_not be_empty
     end
   end
@@ -55,6 +56,18 @@ end
     end
     
     it "should" do
+      page.response_headers['Content-Type'].should =~ /json/
+      page.body.should_not be_empty
+    end
+  end
+
+  describe "yaml" do
+    before do
+      visit("/about.yaml")
+    end
+
+    it "should" do
+      page.response_headers['Content-Type'].should =~ /yaml/
       page.body.should_not be_empty
     end
   end

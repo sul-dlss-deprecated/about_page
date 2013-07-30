@@ -7,9 +7,9 @@
       <span class="label label-<%=component['status'] == 'error' ? 'important' : 'success'%>"><%=component['status']%></span>
       <% if component['errors'].length > 0 %>
         <ul>
-        <li>
-        <%= component['errors'].to_a.join('</li><li>').html_safe %>
-        </li>
+          <li class="component-error">
+            <%= component['errors'].to_a.join('</li><li class="component-error">').html_safe %>
+          </li>
         </ul>
       <% end %>
     </li>
