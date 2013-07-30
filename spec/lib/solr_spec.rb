@@ -2,8 +2,7 @@ require 'spec_helper'
 
 describe AboutPage::Solr do
   before :each do
-    @mock_solr_connection = double('RSolr::Connection')
-    @mock_solr_connection.stub(:uri, URI.parse("http://example.edu/solr"))
+    @mock_solr_connection = double('RSolr::Connection', :uri => URI.parse("http://example.edu/solr"))
   end
 
   subject { AboutPage::Solr.new(@mock_solr_connection) }
@@ -21,7 +20,7 @@ describe AboutPage::Solr do
 
   describe "#index" do
     it "should get the index information from the schema" do
-      m = mock()
+      m = double()
       subject.stub(:schema).and_return { { 'index' => m }}
 
       subject.index.should == m
@@ -65,7 +64,7 @@ describe AboutPage::Solr do
       subject.stub(:expects).and_return 5
 
       subject.should_receive(:add_header)
-      subject.set_headers! mock()
+      subject.set_headers! double()
     end
   end
 
@@ -81,7 +80,7 @@ describe AboutPage::Solr do
 
     it "should use the request parameters to set the minimum_numdocs" do
       node = AboutPage::Solr.new(@mock_solr_connection, :expects => { :numDocs => 5 })
-      node.preflight(mock(:params => { 'solr.numDocs' => 1000 }))
+      node.preflight(double(:params => { 'solr.numDocs' => 1000 }))
 
       node.expects(:numDocs).should == 1000 
     end
