@@ -3,7 +3,7 @@
 <div class="dependencies">
   <ul class="unstyled">
     <% profile.spec_list.each do |dep,version,groups| %>
-    <li class="dependency<%=groups.present? ? ' required' : ''%>"><%=dep%> <small>(<%=version%>)</small></li>
+    <li><span class="dependency<%=groups.present? ? ' required' : ''%>"><%=dep%></span> <span class="muted"><small><%=version%></small></span></li>
     <% end %>
   </ul>
 </div>
