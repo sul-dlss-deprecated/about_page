@@ -1,9 +1,9 @@
 <h2>Dependencies</h2>
 <h4 style="font-weight: normal">Explicit dependencies are in <span class="dependency required">bold</span>.</h4>
 <div class="dependencies">
-  <ul>
+  <ul class="unstyled">
     <% profile.spec_list.each do |dep,version,groups| %>
-    <li class="dependency<%=groups.present? ? ' required' : ''%>"><%=dep%> (<%=version%>)</li>
+    <li class="dependency<%=groups.present? ? ' required' : ''%>"><%=dep%> <small>(<%=version%>)</small></li>
     <% end %>
   </ul>
 </div>
