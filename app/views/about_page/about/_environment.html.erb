@@ -2,10 +2,10 @@
 <% profile.each_pair do |section,env| %>
   <h3><%= section %></h3>
   <div class="environment">
-    <ul>
+    <dl class="dl-horizontal">
       <% env.keys.sort.each do |key| %>
-      <li><%= [key,env[key]].join('=') %></li>
+      <dt><%=key%></dt><dd><%=env[key]%></dd>
       <% end %>
-    </ul>
+    </dl>
   </div>
 <% end %>
