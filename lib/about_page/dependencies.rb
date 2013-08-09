@@ -23,12 +23,18 @@ module AboutPage
     end
 
     def spec_list
+      ruby_ver = "#{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}"
       required = environment.current_dependencies.inject({}) { |h,d| h[d.name] = d.groups; h }
-      list = environment.specs.sort { |a,b| a.name <=> b.name }.collect { |s| [
+      list = [[ 
+        RUBY_ENGINE,
+        Module.const_defined?(:JRUBY_VERSION) ? "#{JRUBY_VERSION}r#{JRUBY_REVISION} (#{ruby_ver})" : ruby_ver,
+        'system'
+      ]] + environment.specs.sort { |a,b| a.name <=> b.name }.collect { |s| [
         s.name, 
         [s.version.to_s, s.git_version.to_s].join,
         required[s.name]
       ]}
+      list
     end
 
     private
