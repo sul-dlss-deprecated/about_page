@@ -13,24 +13,24 @@ module AboutPage
           h[:implied] ||= []
           h[:implied] << spec
         else
-          data[2].each { |g| 
-            h[g] ||= [] 
+          data[2].each { |g|
+            h[g] ||= []
             h[g] << spec
           }
         end
-        h        
+        h
       }
     end
 
     def spec_list
       ruby_ver = "#{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}"
       required = environment.current_dependencies.inject({}) { |h,d| h[d.name] = d.groups; h }
-      list = [[ 
+      list = [[
         RUBY_ENGINE,
         Module.const_defined?(:JRUBY_VERSION) ? "#{JRUBY_VERSION}r#{JRUBY_REVISION} (#{ruby_ver})" : ruby_ver,
-        'system'
+        ['system']
       ]] + environment.specs.sort { |a,b| a.name <=> b.name }.collect { |s| [
-        s.name, 
+        s.name,
         [s.version.to_s, s.git_version.to_s].join,
         required[s.name]
       ]}
@@ -57,7 +57,7 @@ module AboutPage
       location = [spec.source.options.values_at('path','uri').compact.first,rev].compact.join('@')
       [spec.version.to_s,location].compact.join(' ').strip
     end
-    
+
     def dependency_hash(key, graph=nil, depth=0)
       graph = Bundler::Graph.new(environment,'/dev/null') if graph.nil?
       result = { :version => dependency_version(key) }
