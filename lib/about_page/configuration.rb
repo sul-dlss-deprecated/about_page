@@ -70,6 +70,8 @@ module AboutPage
       self.nodes.collect do |key, profile| 
         if profile.class.validators.length > 0 
           health = profile.valid? ? 'ok' : 'error'
+          errors = []
+          profile.errors.messages.each_pair {|k,vals| vals.each {|v| errors << "#{k.to_s} #{v}"}}
           { 'component' => key.to_s, 'status' => health, 'errors' => profile.errors.to_a }
         else
           nil
