@@ -70,7 +70,8 @@ module AboutPage
       self.nodes.collect do |key, profile| 
         if profile.class.validators.length > 0 
           health = profile.valid? ? 'ok' : 'error'
-          { 'component' => key.to_s, 'status' => health, 'errors' => profile.errors.to_a }
+          errors = profile.errors.map {|a,m| "#{a} #{m}"}
+          { 'component' => key.to_s, 'status' => health, 'errors' => errors }
         else
           nil
         end

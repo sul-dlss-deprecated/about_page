@@ -66,7 +66,7 @@ describe "the health page", :type => :feature do
 
         it "should contain an error list" do
           @context.should have_xpath('ul/li[@class="component-error"]')
-          @context.should have_content('Healthy : should be healthy')
+          @context.should have_content('healthy : should be healthy')
         end
       end
     end
