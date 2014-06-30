@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "the health page", :type => :request do
+describe "the health page", :type => :feature do
   before :all do
     module AboutPage
       class HealthTest < AboutPage::Configuration::Node

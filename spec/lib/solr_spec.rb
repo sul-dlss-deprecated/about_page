@@ -13,7 +13,7 @@ describe AboutPage::Solr do
       subject.schema.should be_empty
     end
     it "should retrieve index information from luke" do
-      @mock_solr_connection.should_receive(:get).with('admin/luke', an_instance_of(Hash)).and_return { Hash.new }
+      @mock_solr_connection.should_receive(:get).with('admin/luke', an_instance_of(Hash)).and_return Hash.new
       subject.schema.should be_a_kind_of(Hash)
     end
   end
@@ -21,7 +21,7 @@ describe AboutPage::Solr do
   describe "#index" do
     it "should get the index information from the schema" do
       m = double()
-      subject.stub(:schema).and_return { { 'index' => m }}
+      subject.stub(:schema => { 'index' => m })
 
       subject.index.should == m
     end
@@ -29,39 +29,29 @@ describe AboutPage::Solr do
 
   describe "#valid?" do
     it "should be ok if the number of documents in the index is greater than or equal to the :minimum_numdocs" do
-      subject.stub(:ping).and_return { 'OK' } 
-      subject.stub(:schema).and_return { { 'index' => { :numDocs => 1 } } } 
-      subject.stub(:expects).and_return 1
+      subject.stub(:ping => 'OK' , :schema => { 'index' => { :numDocs => 1 } }, :expects => 1)
       subject.should be_valid
     end
 
     it "should be not be ok if the number of documents in the index is less than the :minimum_numdocs" do
-      subject.stub(:ping).and_return { 'OK' } 
-      subject.stub(:schema).and_return { { 'index' => { :numDocs => 1 } } }
-      subject.stub(:expects).and_return 5
+      subject.stub(:ping => 'OK', :schema => { 'index' => { :numDocs => 1 } }, :expects => 5)
       subject.should_not be_valid
     end
 
     it "should not be ok if the index :numDocs param is not set" do
-      subject.stub(:ping).and_return { 'OK' } 
-      subject.stub(:schema).and_return { { 'index' => { } } } 
-      subject.stub(:expects).and_return 1
+      subject.stub(:ping => 'OK', :schema => { 'index' => { } }, :expects => 1)
       subject.should_not be_valid
     end
 
     it "should not be ok if the server doesn't respond to ping" do
-      subject.stub(:ping).and_return nil
-      subject.stub(:schema).and_return { { 'index' => { } } } 
-      subject.stub(:expects).and_return 1
+      subject.stub(:ping => nil, :schema => { 'index' => { } }, :expects => 1)
       subject.should_not be_valid
     end
   end
 
   describe "#set_headers!" do
     it "should add helpful headers when something is wrong" do
-      subject.stub(:ping).and_return { 'OK' } 
-      subject.stub(:schema).and_return { { 'index' => { :numDocs => 1 } } } 
-      subject.stub(:expects).and_return 5
+      subject.stub(:ping => 'OK', :schema => { 'index' => { :numDocs => 1 } }, :expects => 5)
 
       subject.should_receive(:add_header)
       subject.set_headers! double()

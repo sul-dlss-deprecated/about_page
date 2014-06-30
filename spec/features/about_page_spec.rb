@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "the about page", :type => :request do
+describe "the about page", :type => :feature do
   before :all do
     AboutPage.reset!
 
