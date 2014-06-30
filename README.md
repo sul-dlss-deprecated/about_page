@@ -1,5 +1,7 @@
 # AboutPage
 
+[![Build Status](https://travis-ci.org/sul-dlss/about_page.svg?branch=master)](https://travis-ci.org/sul-dlss/about_page)
+
 To use in a Hydra app:
 
     # In Gemfile
