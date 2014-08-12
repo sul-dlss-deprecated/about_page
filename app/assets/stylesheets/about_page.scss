@@ -22,3 +22,23 @@
 dl.dl-horizontal dd {
   margin-bottom: 0px;
 }
+
+.git-log {
+  white-space: nowrap;
+  table {
+    width: 100%;
+    font-size: 85%;
+    table-layout: fixed;
+    tr:nth-child(odd) { background-color: lightgrey; }
+    td {
+      padding: 0px 3px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      &.mono { font-family: consolas, andale-mono, monospace; }
+    }
+    col.git-time { width: 20%; }
+    col.git-sha  { width: 8%; }
+    col.git-desc { width: 50%; }
+    col.git-auth { width: 22%; }
+  }
+}
