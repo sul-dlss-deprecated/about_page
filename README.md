@@ -21,6 +21,7 @@ To use in a Hydra app:
       config.dependencies  = AboutPage::Dependencies.new
       config.fedora        = AboutPage::Fedora.new(ActiveFedora::Base.connection_for_pid(0))  # Rubydora::Repository instance
       config.solr          = AboutPage::Solr.new(ActiveFedora.solr)                           # RSolr instance
+      config.git           = AboutPage::GitLog.new(15) # Display the last 15 git commits
     end
     
     # In config/routes.rb

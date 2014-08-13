@@ -1,0 +1,41 @@
+<h2>Git Log</h2>
+<div class="git-log">
+  <p>
+    <span class="label label-info">Local Branch</span> 
+    <span class="label label-warning">Remote Branch</span> 
+    <span class="label label-danger">Tag</span> 
+  </p>
+  <table>
+    <colgroup>
+      <col class="git-time"/>
+      <col class="git-sha"/>
+      <col class="git-desc"/>
+      <col class="git-auth"/>
+    </colgroup>
+    <tbody>
+    <% profile.commits.each do |commit| %>
+      <tr>
+        <td class="mono"><%= Time.parse(commit[:commit]['authored_date']).to_s %></td>
+        <td class="mono"><%= commit[:commit]['id'][0..6] %></td>
+        <td>
+          <% Array(commit[:refs]).each do |ref| %>
+            <% 
+              ref_class = 'label label-'
+              if ref =~ %r{/remotes/}
+                ref_class << 'warning'
+              elsif ref =~ %r{/tags/}
+                ref_class << 'danger'
+              else
+                ref_class << 'info'
+              end
+            %>
+            <span class="<%=ref_class%>"><%= ref.split(%r{^refs/(heads|remotes|tags)/}).last %></span>
+          <% end %>
+          <span class="git-msg"><%= commit[:commit]['message'].lines.first.chomp %></span>
+        </td>
+        <td><%= '%s <%s>' % commit[:commit]['author'].values_at('name','email') %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+</div>
