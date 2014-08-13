@@ -12,14 +12,17 @@ describe "AboutPage::GitLog" do
   end
 
   it "should respect line limits" do
+    pending "Grit doesn't work under JRuby" if defined? JRUBY_VERSION
     expect(AboutPage::GitLog.new(root: root, limit: 5).commits.length).to eq(5)
   end
-  
+
   it "should respect RegExp limits" do
+    pending "Grit doesn't work under JRuby" if defined? JRUBY_VERSION
     expect(AboutPage::GitLog.new(root: root, limit: %r{^refs/tags/}).commits.last[:refs]).to include('refs/tags/v0.5')
   end
 
   it "should respect Proc limits" do
+    pending "Grit doesn't work under JRuby" if defined? JRUBY_VERSION
     check = double('commit checker')
     expect(check).to receive(:check).with(instance_of(Grit::Commit)).exactly(2).times.and_return(false, true)
     limit = ->(c) { check.check(c) }
