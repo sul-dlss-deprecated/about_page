@@ -15,8 +15,8 @@
     <tbody>
     <% profile.commits.each do |commit| %>
       <tr>
-        <td class="mono"><%= Time.parse(commit[:commit]['authored_date']).to_s %></td>
-        <td class="mono"><%= commit[:commit]['id'][0..6] %></td>
+        <td class="mono"><%= commit[:commit].author[:time].to_s %></td>
+        <td class="mono"><%= commit[:commit].oid[0..6] %></td>
         <td>
           <% Array(commit[:refs]).each do |ref| %>
             <% 
@@ -31,9 +31,9 @@
             %>
             <span class="<%=ref_class%>"><%= ref.split(%r{^refs/(heads|remotes|tags)/}).last %></span>
           <% end %>
-          <span class="git-msg"><%= commit[:commit]['message'].lines.first.chomp %></span>
+          <span class="git-msg"><%= commit[:commit].message.lines.first.chomp %></span>
         </td>
-        <td><%= '%s <%s>' % commit[:commit]['author'].values_at('name','email') %></td>
+        <td><%= '%s <%s>' % commit[:commit].author.values_at(:name,:email) %></td>
       </tr>
     <% end %>
     </tbody>
