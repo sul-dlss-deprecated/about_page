@@ -30,9 +30,7 @@ module AboutPage
       @repo.remotes.each { |remote| remote.fetch rescue nil } if @fetch
       refs = @repo.refs.inject(Hash.new { |h,k| h[k] = [] }) { |h,r| h[find_commit(r).oid] << r.name; h }
       result = []
-      walker = Rugged::Walker.new(@repo)
-      walker.push(@repo.head.name)
-      walker.each do |c|
+      @repo.walk(@repo.head.name, Rugged::SORT_TOPO+Rugged::SORT_DATE) do |c|
         result << { :commit => c, :refs => refs[c.oid] }
         bail = case @limit
         when Fixnum then result.length == @limit
