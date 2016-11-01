@@ -1,33 +1,44 @@
+begin
+  require 'net/http'
+  require 'uri'
+rescue LoadError
+end
+
 module AboutPage
   class Fedora < AboutPage::Configuration::Node
 
-    validates_each :profile do |record, attr, value| 
-      unless value.present?
-        record.errors.add attr, ": unable to connect to Fedora at #{record.rubydora.config[:url]}"
-      end
-    end
+    attr_accessor :fedora_url
 
     render_with 'generic_hash'
 
-    attr_accessor :rubydora
-
-    def initialize rubydora_instance
-      self.rubydora = rubydora_instance
+    def initialize(fedora)
+      self.fedora_url = fedora.chomp("/rest")
     end
 
-    def profile
-      rubydora.profile || {}
+    def fedora_info
+      uri = URI.parse(fedora_url)
+      response = Net::HTTP.get_response(uri)
+
+      case response
+      when Net::HTTPSuccess then
+        page = Nokogiri::HTML(response.body)
+
+        release = page.css("span#version").text
+        build = page.css("span#build").text
+        timestamp = page.css("span#timestamp").text
+
+        h = {}
+        h["Release"] = release unless release.nil?
+        h["Build"] = build unless release.nil?
+        h["Timestamp"] = timestamp unless release.nil?
+        h
+      else
+        {}
+      end
     end
 
     def to_h
-      profile
-    end
-
-
-    def preflight request
-      # FIXME: ew.
-      self.rubydora.instance_variable_set('@profile', nil)
-      super(request)
+      fedora_info
     end
 
   end
