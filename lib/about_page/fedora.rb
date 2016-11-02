@@ -1,7 +1,7 @@
 module AboutPage
   class Fedora < AboutPage::Configuration::Node
 
-    attr_accessor :fedora
+    attr_accessor :fedora, :fedora_url
 
     render_with 'generic_hash'
 
@@ -13,6 +13,7 @@ module AboutPage
 
     def initialize(fedora_instance)
       self.fedora = fedora_instance
+      self.fedora_url = fedora.http.url_prefix.to_s
     end
 
     def fedora_info
@@ -24,7 +25,7 @@ module AboutPage
       timestamp = doc.css("span#timestamp").text
 
       h = {}
-      h["Fedora location"] = fedora.http.url_prefix.to_s
+      h["Fedora location"] = fedora_url
       h["Release"] = release unless release.nil?
       h["Build"] = build unless release.nil?
       h["Timestamp"] = timestamp unless release.nil?
