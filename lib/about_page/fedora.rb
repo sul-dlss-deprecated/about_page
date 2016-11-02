@@ -11,6 +11,12 @@ module AboutPage
 
     render_with 'generic_hash'
 
+    validates_each :ping do |record, attr, value|
+      unless value == 200
+        record.errors.add attr, ": unable to reach Fedora at #{record.fedora_url}"
+      end
+    end
+
     def initialize(fedora)
       self.fedora_url = fedora.chomp("/rest")
     end
@@ -35,6 +41,12 @@ module AboutPage
       else
         {}
       end
+    end
+
+    def ping
+      ActiveFedora.fedora.connection.get("/rest").response.status
+    rescue
+      nil
     end
 
     def to_h
