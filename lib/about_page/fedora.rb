@@ -1,13 +1,7 @@
-begin
-  require 'net/http'
-  require 'uri'
-rescue LoadError
-end
-
 module AboutPage
   class Fedora < AboutPage::Configuration::Node
 
-    attr_accessor :fedora_url
+    attr_accessor :fedora
 
     render_with 'generic_hash'
 
@@ -17,34 +11,30 @@ module AboutPage
       end
     end
 
-    def initialize(fedora)
-      self.fedora_url = fedora.chomp("/rest")
+    def initialize(fedora_instance)
+      self.fedora = fedora_instance
     end
 
     def fedora_info
-      uri = URI.parse(fedora_url)
-      response = Net::HTTP.get_response(uri)
+      resp = fedora.get("/").response.body
+      doc = Nokogiri::XML resp
 
-      case response
-      when Net::HTTPSuccess then
-        page = Nokogiri::HTML(response.body)
+      release = doc.css("span#version").text
+      build = doc.css("span#build").text
+      timestamp = doc.css("span#timestamp").text
 
-        release = page.css("span#version").text
-        build = page.css("span#build").text
-        timestamp = page.css("span#timestamp").text
-
-        h = {}
-        h["Release"] = release unless release.nil?
-        h["Build"] = build unless release.nil?
-        h["Timestamp"] = timestamp unless release.nil?
-        h
-      else
-        {}
-      end
+      h = {}
+      h["Fedora location"] = fedora.http.url_prefix.to_s
+      h["Release"] = release unless release.nil?
+      h["Build"] = build unless release.nil?
+      h["Timestamp"] = timestamp unless release.nil?
+      h
+    rescue
+      {}
     end
 
     def ping
-      ActiveFedora.fedora.connection.get("/rest").response.status
+      fedora.get("/rest").response.status
     rescue
       nil
     end
