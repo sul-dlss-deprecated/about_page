@@ -17,10 +17,14 @@ Gem::Specification.new do |s|
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
 
   s.add_dependency "rails", ">= 3.2"
-  s.add_dependency "rugged" unless defined? JRUBY_VERSION
   s.add_development_dependency "rspec", "~> 3.0"
   s.add_development_dependency "rspec-rails"
   s.add_development_dependency "capybara"
   s.add_development_dependency "launchy"
-  # s.add_dependency "jquery-rails"
+  s.add_development_dependency "rugged"
+  
+  s.post_install_message  = %(
+    To use the git_log node type, add the following line to your Gemfile:
+    gem 'rugged'
+  ).gsub(/^  /m, '')
 end
