@@ -28,4 +28,22 @@ describe "AboutPage::GitLog" do
     limit = ->(c) { check.check(c) }
     expect(AboutPage::GitLog.new(root: root, limit: limit).commits.length).to eq(2)
   end
+  
+  describe "without rugged" do
+    before :each do
+      RuggedPlaceholder = Rugged
+      Object.send(:remove_const, :Rugged)
+    end
+    
+    after :each do
+      Rugged = RuggedPlaceholder
+      Object.send(:remove_const, :RuggedPlaceholder)
+    end
+    
+    it "should issue a warning" do
+      pending "Rugged doesn't work under JRuby" if defined? JRUBY_VERSION
+      expect(Rails.logger).to receive(:warn)
+      expect(AboutPage::GitLog.new.commits).to be_empty
+    end
+  end
 end
