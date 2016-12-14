@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rspec-rails"
   s.add_development_dependency "capybara"
   s.add_development_dependency "launchy"
-  s.add_development_dependency "rugged"
+  s.add_development_dependency "rugged" unless RUBY_PLATFORM == "java"
   
   s.post_install_message  = %(
     To use the git_log node type, add the following line to your Gemfile:
